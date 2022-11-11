@@ -26,7 +26,7 @@ class _HomeTabState extends State<HomeTab> {
                 ),
                 textAlign: TextAlign.justify,
               ),
-            )
+            ),
           ],
         ),
       ),
