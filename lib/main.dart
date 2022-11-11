@@ -13,13 +13,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      builder: (context, child) {
+    return ScrollConfiguration(
+      behavior: MyBehavior(),
+      child: const HomePage(),
+    );
+  },
       debugShowCheckedModeBanner: false,
       title: 'Hear Me',
       theme: ThemeData(
+        
           primarySwatch: Colors.deepOrange,
           scaffoldBackgroundColor: CupertinoColors.black,
           textTheme: GoogleFonts.nunitoTextTheme()),
-      home: const HomePage(),
     );
+  }
+}
+
+class MyBehavior extends ScrollBehavior {
+  @override
+  Widget buildOverscrollIndicator(
+      BuildContext context, Widget child, ScrollableDetails details) {
+    return child;
   }
 }
