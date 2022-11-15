@@ -1,10 +1,7 @@
-import 'dart:html';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:hear_me/activity/TestPage.dart';
 import 'Token.dart';
 import 'activity/HomePage.dart';
 
@@ -40,7 +37,7 @@ class MyApp extends StatelessWidget {
         builder: (context, child) {
           return ScrollConfiguration(
             behavior: MyBehavior(),
-            child: const TestPage(),
+            child: const HomePage(),
           );
         },
         debugShowCheckedModeBanner: false,
