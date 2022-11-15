@@ -1,4 +1,5 @@
 class Queries {
+  // ignore: non_constant_identifier_names
   String trending_Podcasts = """query {
     podcasts(
         first: 20
@@ -9,18 +10,7 @@ class Queries {
         data {
             id,
             title,
-            description,
             imageUrl,
-          episodes(first: 3) {          
-  data {
-      id,
-      guid,
-      title,
-      description,
-      imageUrl,
-      audioUrl  
-  }
-}
         }
     }
 }

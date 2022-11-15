@@ -1,22 +1,16 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:hear_me/Queries.dart';
 
-class HomeTab extends StatefulWidget {
-  const HomeTab({super.key});
+class Explore extends StatefulWidget {
+  const Explore({super.key});
 
   @override
-  State<HomeTab> createState() => _HomeTabState();
+  State<Explore> createState() => _ExploreState();
 }
 
-class _HomeTabState extends State<HomeTab> {
+class _ExploreState extends State<Explore> {
   @override
   Widget build(BuildContext context) {
-    
-   
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(18.0),
@@ -25,14 +19,14 @@ class _HomeTabState extends State<HomeTab> {
             SizedBox(
               width: MediaQuery.of(context).size.width,
               child: const Text(
-                "Trending",
+                "Explore",
                 style: TextStyle(
                   color: CupertinoColors.systemGrey6,
                   fontSize: 25,
                 ),
                 textAlign: TextAlign.justify,
               ),
-            ),
+            )
           ],
         ),
       ),

@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hear_me/activity/Tabs/ExploreTab.dart';
 import 'package:hear_me/activity/Tabs/FavouritesTab.dart';
-import 'package:hear_me/activity/Tabs/HomeTab.dart';
+import 'package:hear_me/activity/Tabs/TrendingTab.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,7 +16,7 @@ class _HomePageState extends State<HomePage>
   late TabController _controller;
   @override
   void initState() {
-    _controller = TabController(length: 2, vsync: this);
+    _controller = TabController(length: 3, vsync: this);
     super.initState();
   }
 
@@ -28,7 +29,7 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -65,6 +66,12 @@ class _HomePageState extends State<HomePage>
                   ),
                 ),
                 Tab(
+                  icon: Icon(Icons.explore),
+                  child: Text(
+                    "Explore",
+                  ),
+                ),
+                Tab(
                   icon: Icon(Icons.favorite),
                   child: Text("Favourites"),
                 ),
@@ -73,7 +80,7 @@ class _HomePageState extends State<HomePage>
             Expanded(
               child: TabBarView(
                   controller: _controller,
-                  children: const [HomeTab(), FavouritesTab()]),
+                  children: const [TrendingTab(),Explore(), FavouritesTab()]),
             )
           ],
         ),
