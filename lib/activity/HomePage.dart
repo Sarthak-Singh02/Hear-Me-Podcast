@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hear_me/Tabs/FavouritesTab.dart';
-import 'package:hear_me/Tabs/HomeTab.dart';
+import 'package:hear_me/activity/Tabs/FavouritesTab.dart';
+import 'package:hear_me/activity/Tabs/HomeTab.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
