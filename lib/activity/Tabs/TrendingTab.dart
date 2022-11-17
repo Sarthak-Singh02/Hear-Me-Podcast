@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:hear_me/Queries.dart';
+import 'package:hear_me/activity/Tabs/ExploreTab.dart';
 
 class TrendingTab extends StatelessWidget {
   const TrendingTab({super.key});
@@ -48,19 +49,25 @@ class TrendingTab extends StatelessWidget {
                     child: GridTile(
                         child: ClipRRect(
                       borderRadius: BorderRadius.circular(20.0),
-                      child: Image.network(response[index]["imageUrl"],
-                          frameBuilder:
-                              (context, child, frame, wasSynchronouslyLoaded) {
-                        return child;
-                      }, loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) {
+                      child: InkWell(
+                        onTap: () => {
+                           Navigator.pushReplacement(
+context,MaterialPageRoute(builder: (context) => Explore())),
+                        },
+                        child: Image.network(response[index]["imageUrl"],
+                            frameBuilder:
+                                (context, child, frame, wasSynchronouslyLoaded) {
                           return child;
-                        } else {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      }),
+                        }, loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        }),
+                      ),
                     )),
                   ),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
