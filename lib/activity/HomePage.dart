@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage>
               ),
               tabs: const [
                 Tab(
-                  icon: Icon(Icons.home_filled),
+                  icon: Icon(Icons.podcasts),
                   child: Text(
                     "Home",
                   ),

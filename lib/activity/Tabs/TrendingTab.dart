@@ -2,7 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:hear_me/Queries.dart';
+
+import 'package:hear_me/activity/Episodes.dart';
+
 import 'package:hear_me/activity/Tabs/ExploreTab.dart';
+
 
 class TrendingTab extends StatelessWidget {
   const TrendingTab({super.key});
@@ -46,14 +50,25 @@ class TrendingTab extends StatelessWidget {
                   itemCount: response.length,
                   itemBuilder: (context, index) => Padding(
                     padding: const EdgeInsets.all(8.0),
+
+                    child: InkWell(
+                      onTap: () {
+                         Navigator.push<void>(
+    context,
+    MaterialPageRoute<void>(
+      builder: (BuildContext context) => const Episodes(),
+    ),);
+                      },
+                      child: GridTile(
+                          child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20.0),
+
                     child: GridTile(
                         child: ClipRRect(
                       borderRadius: BorderRadius.circular(20.0),
                       child: InkWell(
-                        onTap: () => {
-                           Navigator.pushReplacement(
-context,MaterialPageRoute(builder: (context) => Explore())),
-                        },
+                        
+
                         child: Image.network(response[index]["imageUrl"],
                             frameBuilder:
                                 (context, child, frame, wasSynchronouslyLoaded) {
@@ -67,8 +82,13 @@ context,MaterialPageRoute(builder: (context) => Explore())),
                             );
                           }
                         }),
+
+                      )),
+                    ),
+
                       ),
                     )),
+
                   ),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 1,

@@ -8,7 +8,11 @@ import 'activity/HomePage.dart';
 void main() async {
   await initHiveForFlutter();
  
-  runApp(MaterialApp( home: MyApp()));
+
+ runApp(const MaterialApp( home: MyApp()));
+
+  
+
 }
 
 class MyApp extends StatelessWidget {
