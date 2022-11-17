@@ -34,7 +34,6 @@ class TrendingTab extends StatelessWidget {
                 if (result.hasException) {
                   return Text(result.exception.toString());
                 }
-
                 if (result.isLoading) {
                   return const CircularProgressIndicator();
                 }
