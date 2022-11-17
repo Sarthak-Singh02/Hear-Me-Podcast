@@ -2,7 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:hear_me/Queries.dart';
+
 import 'package:hear_me/activity/Episodes.dart';
+
+import 'package:hear_me/activity/Tabs/ExploreTab.dart';
+
 
 class TrendingTab extends StatelessWidget {
   const TrendingTab({super.key});
@@ -46,6 +50,7 @@ class TrendingTab extends StatelessWidget {
                   itemCount: response.length,
                   itemBuilder: (context, index) => Padding(
                     padding: const EdgeInsets.all(8.0),
+
                     child: InkWell(
                       onTap: () {
                          Navigator.push<void>(
@@ -57,6 +62,13 @@ class TrendingTab extends StatelessWidget {
                       child: GridTile(
                           child: ClipRRect(
                         borderRadius: BorderRadius.circular(20.0),
+
+                    child: GridTile(
+                        child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20.0),
+                      child: InkWell(
+                        
+
                         child: Image.network(response[index]["imageUrl"],
                             frameBuilder:
                                 (context, child, frame, wasSynchronouslyLoaded) {
@@ -70,8 +82,13 @@ class TrendingTab extends StatelessWidget {
                             );
                           }
                         }),
+
                       )),
                     ),
+
+                      ),
+                    )),
+
                   ),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 1,
