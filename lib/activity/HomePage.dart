@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage>
                 Tab(
                   icon: Icon(Icons.podcasts),
                   child: Text(
-                    "Home",
+                    "Trending",
                   ),
                 ),
                 Tab(
@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage>
             Expanded(
               child: TabBarView(
                   controller: _controller,
-                  children: const [TrendingTab(),Explore(), FavouritesTab()]),
+                  children: const [TrendingTab(), Explore(), FavouritesTab()]),
             )
           ],
         ),
