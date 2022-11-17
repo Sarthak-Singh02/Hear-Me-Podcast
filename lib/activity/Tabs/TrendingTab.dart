@@ -7,14 +7,11 @@ import 'package:hear_me/activity/Episodes.dart';
 
 import 'package:hear_me/activity/Tabs/ExploreTab.dart';
 
-
 class TrendingTab extends StatelessWidget {
   const TrendingTab({super.key});
 
   @override
   Widget build(BuildContext context) {
-    
-   
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(18.0),
@@ -32,68 +29,76 @@ class TrendingTab extends StatelessWidget {
               ),
             ),
             Query(
-              options: QueryOptions(document: gql(Queries().trending_Podcasts)),
-              builder: (QueryResult result,
-                  {VoidCallback? refetch, FetchMore? fetchMore}) {
-                if (result.hasException) {
-                  return Text(result.exception.toString());
-                }
-                if (result.isLoading) {
-                  return const CircularProgressIndicator();
-                }
-                final response = result.data!["podcasts"]["data"] as List;
+                options:
+                    QueryOptions(document: gql(Queries().trending_Podcasts)),
+                builder: (QueryResult result,
+                    {VoidCallback? refetch, FetchMore? fetchMore}) {
+                  if (result.hasException) {
+                    return Text(result.exception.toString());
+                  }
+                  if (result.isLoading) {
+                    return const CircularProgressIndicator();
+                  }
+                  final response = result.data!["podcasts"]["data"] as List;
 
-                return GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: response.length,
-                  itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.all(8.0),
-
-                    child: InkWell(
-                      onTap: () {
-                         Navigator.push<void>(
-    context,
-    MaterialPageRoute<void>(
-      builder: (BuildContext context) => const Episodes(),
-    ),);
-                      },
-                      child: GridTile(
-                          child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20.0),
-
-                    child: GridTile(
-                        child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0),
+                  return GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: response.length,
+                    itemBuilder: (context, index) => Padding(
+                      padding: const EdgeInsets.all(8.0),
                       child: InkWell(
-                        
-
-                        child: Image.network(response[index]["imageUrl"],
-                            frameBuilder:
-                                (context, child, frame, wasSynchronouslyLoaded) {
-                          return child;
-                        }, loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) {
-                            return child;
-                          } else {
-                            return const Center(
-                              child: CircularProgressIndicator(),
+                          onTap: () {
+                            Navigator.push<void>(
+                              context,
+                              CupertinoPageRoute<void>(
+                                builder: (BuildContext context) =>
+                                    const Episodes(),
+                              ),
                             );
-                          }
-                        }),
-
-                      )),
+                          },
+                          child: GridTile(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20.0),
+                              child: GridTile(
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    child: InkWell(
+                                      child: Image.network(
+                                        response[index]["imageUrl"],
+                                        frameBuilder: (context, child, frame,
+                                            wasSynchronouslyLoaded) {
+                                          return child;
+                                        },
+                                        loadingBuilder:
+                                            (context, child, loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          } else {
+                                            return const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            );
+                                          }
+                                        },
+                                        errorBuilder: (BuildContext context,
+                                            Object exception,
+                                            StackTrace? stackTrace) {
+                                          return const Text(
+                                              'Error loading image');
+                                        },
+                                      ),
+                                    )),
+                              ),
+                            ),
+                          )),
                     ),
-
-                      ),
-                    )),
-
-                  ),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1,
-                  ),
-                );
-              }),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1,
+                    ),
+                  );
+                }),
           ],
         ),
       ),
