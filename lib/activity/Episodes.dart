@@ -19,7 +19,7 @@ class Episodes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: ListView(
         children: [
           Stack(
             children: [

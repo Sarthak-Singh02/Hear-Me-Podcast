@@ -55,7 +55,6 @@ class TrendingTab extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: InkWell(
                                   onTap: () {
-                                    
                                     Navigator.push<void>(
                                       context,
                                       MaterialPageRoute<void>(
