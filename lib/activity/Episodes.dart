@@ -1,12 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:hear_me/activity/AudioPlayer/Audioplayer.dart';
 import 'package:hear_me/main.dart';
 
-import '../Queries.dart';
-
 class Episodes extends StatelessWidget {
-  const Episodes(
+  Episodes(
       {super.key,
       required this.podcast_id,
       required this.podcast_description,
@@ -16,6 +14,8 @@ class Episodes extends StatelessWidget {
   final String podcast_id;
   final String podcast_description;
   final String podcast_title;
+
+  Set _audios = {};
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +66,15 @@ class Episodes extends StatelessWidget {
                     height: MediaQuery.of(context).size.height / 2,
                     alignment: Alignment.centerRight,
                     child: FloatingActionButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        
+                        Navigator.push<void>(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (BuildContext context) => AudioPlayer(audious: [_audios.toList()],),
+                          ),
+                        );
+                      },
                       child: const Icon(
                         Icons.play_arrow_rounded,
                         color: Colors.black,
@@ -108,6 +116,9 @@ query {
                   }
                   final response =
                       result.data!["podcast"]["episodes"]["data"] as List;
+                  for (int i = 0; i < response.length; i++) {
+                    _audios.add({response[i]["audioUrl"]});
+                  }
 
                   return (response.isNotEmpty)
                       ? ListView.builder(

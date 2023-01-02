@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:hear_me/BloC/internet_bloc.dart';
+import 'package:hear_me/BloC/InternetBloc/internet_bloc.dart';
 import 'Token.dart';
 import 'activity/HomePage.dart';
 
 void main() async {
   await initHiveForFlutter();
-
   runApp(const MaterialApp(home: MyApp()));
 }
 
@@ -53,9 +52,11 @@ class MyApp extends StatelessWidget {
               ),
               textTheme: GoogleFonts.nunitoTextTheme()),
           home: const HomePage(),
+          
         ),
       ),
     );
+    
   }
 }
 

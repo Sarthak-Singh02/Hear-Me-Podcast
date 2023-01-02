@@ -1,8 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:hear_me/BloC/internet_bloc.dart';
-import 'package:hear_me/BloC/internet_state.dart';
+import 'package:hear_me/BloC/InternetBloc/internet_bloc.dart';
+import 'package:hear_me/BloC/InternetBloc/internet_state.dart';
 import 'package:hear_me/Queries.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hear_me/activity/Episodes.dart';
@@ -73,35 +74,16 @@ class TrendingTab extends StatelessWidget {
                                   },
                                   child: GridTile(
                                     child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        child: Image.network(
-                                          response[index]["imageUrl"],
-                                          frameBuilder: (context, child, frame,
-                                              wasAsynchronouslyLoaded) {
-                                            return child;
-                                          },
-                                          loadingBuilder: (context, child,
-                                              loadingProgress) {
-                                            if (loadingProgress == null) {
-                                              return child;
-                                            } else {
-                                              return const Center(
-                                                child:
-                                                    CircularProgressIndicator(),
-                                              );
-                                            }
-                                          },
-                                          errorBuilder: (BuildContext context,
-                                              Object exception,
-                                              StackTrace? stackTrace) {
-                                            return const Text(
-                                              'Error loading image',
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            );
-                                          },
-                                        )),
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      child: CachedNetworkImage(
+                                        imageUrl: response[index]["imageUrl"]
+                                            .toString(),
+                                        placeholder: (context, url) =>
+                                            Center(child: new CircularProgressIndicator()),
+                                        errorWidget: (context, url, error) =>
+                                            new Icon(Icons.error),
+                                      ),
+                                    ),
                                   )),
                             ),
                             gridDelegate:

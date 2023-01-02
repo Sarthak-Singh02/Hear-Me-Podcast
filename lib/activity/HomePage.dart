@@ -80,10 +80,11 @@ class _HomePageState extends State<HomePage>
             Expanded(
               child: TabBarView(
                   controller: _controller,
-                  children: const [TrendingTab(), Explore(), FavouritesTab()]),
+                  children:  [TrendingTab(), Explore(), FavouritesTab()]),
             )
           ],
         ),
+        
       ),
     );
   }
