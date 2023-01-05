@@ -36,4 +36,38 @@ query {
     }
 }
 """;
+
+String func(String genre){
+  return """ query {
+    podcasts(
+        first: 20,
+        page: 0,
+        searchTerm: "", filters: {
+        language : "en",
+        categories : "comedy"
+        rating: {minRating: 4, maxRating: 5}}, ) {
+        
+        data {
+            id,
+            title,
+            description,
+            imageUrl,
+          episodes(
+              page: 0,
+              first: 3) {          
+  data {
+      id,
+      guid,
+      title,
+      description,
+      imageUrl,
+      audioUrl  
+  }
+}
+        }
+    }
+}
+""";
+}
+    
 }

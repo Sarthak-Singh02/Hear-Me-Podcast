@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:hear_me/BloC/InternetBloc/internet_bloc.dart';
+import 'package:hear_me/activity/Tabs/ExploreTab.dart';
 import 'Token.dart';
 import 'activity/HomePage.dart';
 
@@ -51,7 +52,7 @@ class MyApp extends StatelessWidget {
                 ),
               ),
               textTheme: GoogleFonts.nunitoTextTheme()),
-          home: const HomePage(),
+          home: HomePage(),
           
         ),
       ),
