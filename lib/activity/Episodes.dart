@@ -67,12 +67,12 @@ class Episodes extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: FloatingActionButton(
                       onPressed: () {
-                        print(_audios);
+                        print(_audios[0].toString());
                         Navigator.push<void>(
                           context,
                           MaterialPageRoute<void>(
                             builder: (BuildContext context) => MyAudioPlayer(
-                              audios: _audios,
+                              audios: _audios[0].toString(),
                             ),
                           ),
                         );
@@ -94,7 +94,7 @@ query {
     podcast(identifier:{id: "$podcast_id", type : PODCHASER}) {
         episodes(
               page: 0,
-              first: 3) {          
+              first: 1) {          
   data {
       id,
       guid,

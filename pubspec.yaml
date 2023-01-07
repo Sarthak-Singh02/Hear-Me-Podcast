@@ -41,7 +41,8 @@ dependencies:
   flutter_bloc: ^8.1.1
   connectivity_plus: ^3.0.2
   cached_network_image: ^3.2.3
-  just_audio: ^0.9.30
+  audioplayers: ^1.2.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
