@@ -15,7 +15,7 @@ class Episodes extends StatelessWidget {
   final String podcast_description;
   final String podcast_title;
 
-  Set _audios = {};
+  List _audios = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,11 +67,13 @@ class Episodes extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: FloatingActionButton(
                       onPressed: () {
-                        
+                        print(_audios[0].toString());
                         Navigator.push<void>(
                           context,
                           MaterialPageRoute<void>(
-                            builder: (BuildContext context) => AudioPlayer(audious: [_audios.toList()],),
+                            builder: (BuildContext context) => MyAudioPlayer(
+                              audios: _audios[0].toString(),
+                            ),
                           ),
                         );
                       },
@@ -101,7 +103,7 @@ query {
     podcast(identifier:{id: "$podcast_id", type : PODCHASER}) {
         episodes(
               page: 0,
-              first: 3) {          
+              first: 1) {          
   data {
       id,
       guid,
@@ -125,6 +127,7 @@ query {
                   }
                   final response =
                       result.data!["podcast"]["episodes"]["data"] as List;
+                  _audios.clear();
                   for (int i = 0; i < response.length; i++) {
                     _audios.add({response[i]["audioUrl"]});
                   }
@@ -134,21 +137,22 @@ query {
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: response.length,
-                          itemBuilder: (context, index) => Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ListTile(
-                              leading: const Icon(
-                                Icons.podcasts,
-                                color: Colors.deepOrange,
-                                size: 30,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ListTile(
+                                leading: const Icon(
+                                  Icons.podcasts,
+                                  color: Colors.deepOrange,
+                                  size: 30,
+                                ),
+                                title: Text(
+                                  response[index]["title"],
+                                  style: const TextStyle(color: Colors.white),
+                                ),
                               ),
-                              title: Text(
-                                response[index]["title"],
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        )
+                            );
+                          })
                       : const CircularProgressIndicator();
                 }),
           )

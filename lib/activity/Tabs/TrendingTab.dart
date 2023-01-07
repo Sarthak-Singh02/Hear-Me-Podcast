@@ -78,8 +78,9 @@ class TrendingTab extends StatelessWidget {
                                       child: CachedNetworkImage(
                                         imageUrl: response[index]["imageUrl"]
                                             .toString(),
-                                        placeholder: (context, url) =>
-                                            Center(child: new CircularProgressIndicator()),
+                                        placeholder: (context, url) => Center(
+                                            child:
+                                                new CircularProgressIndicator()),
                                         errorWidget: (context, url, error) =>
                                             new Icon(Icons.error),
                                       ),
@@ -92,6 +93,8 @@ class TrendingTab extends StatelessWidget {
                             ),
                           );
                         });
+                  } else if (state is InternetInitialState) {
+                    return const Center(child: CircularProgressIndicator(color: Colors.deepOrange,),);
                   } else {
                     return Padding(
                       padding: const EdgeInsets.only(top: 60),
