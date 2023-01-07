@@ -1,10 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hear_me/BloC/AudioPlayerBloc/audio_player_bloc.dart';
 
-class AudioPlayer extends StatelessWidget {
-  final List audious;
-  const AudioPlayer({super.key, required this.audious});
+import '../../BloC/AudioPlayerBloc/audio_player_state.dart';
 
+class MyAudioPlayer extends StatelessWidget {
+  final List audios;
+  MyAudioPlayer({super.key, required this.audios});
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,7 +18,7 @@ class AudioPlayer extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () {},
-              icon: Icon(
+              icon: const Icon(
                 Icons.list,
               )),
         ],
@@ -23,7 +27,7 @@ class AudioPlayer extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.podcasts_rounded,
               color: Colors.deepOrange,
               size: 200,
@@ -47,32 +51,66 @@ class AudioPlayer extends StatelessWidget {
             SizedBox(
               height: MediaQuery.of(context).size.height / 12,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Icon(
-                  CupertinoIcons.backward_fill,
-                  color: Colors.white,
-                ),
-                GestureDetector(
-                  onTap: () {},
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(
-                        Icons.play_circle,
-                        size: 55,
-                        color: Colors.deepOrange,
-                      ),
+            BlocProvider(
+              create: (context) => AudioPlayerBloc(),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      CupertinoIcons.backward_end_fill,
+                      color: Colors.white,
                     ),
                   ),
-                ),
-                Icon(
-                  CupertinoIcons.forward_fill,
-                  color: Colors.white,
-                ),
-              ],
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      CupertinoIcons.backward_fill,
+                      color: Colors.white,
+                    ),
+                  ),
+                  BlocBuilder<AudioPlayerBloc, AudioPlayerState>(
+                    builder: (context, state) {
+                      return IconButton(
+                        onPressed: () async {
+                          if (state is AudioPlayerPlayState) {
+                            context.read<AudioPlayerBloc>().pause();
+                          } else {
+                            context.read<AudioPlayerBloc>().play();
+                           
+                          }
+                        },
+                        icon: (state is AudioPlayerPlayState)
+                            ? const Icon(
+                                CupertinoIcons.pause_circle,
+                                color: Colors.deepOrange,
+                                size: 40,
+                              )
+                            : const Icon(
+                                CupertinoIcons.play_circle,
+                                color: Colors.deepOrange,
+                                size: 40,
+                              ),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      CupertinoIcons.forward_fill,
+                      color: Colors.white,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      CupertinoIcons.forward_end_fill,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
