@@ -82,6 +82,15 @@ class Episodes extends StatelessWidget {
                         color: Colors.black,
                       ),
                     )),
+              ),
+              Container(
+                alignment: Alignment.centerRight,
+                child: InkWell(
+                  onTap: () => {
+                    print("hue hue"),
+                  },
+                  child: 
+                Icon(Icons.favorite_border)),
               )
             ],
           ),

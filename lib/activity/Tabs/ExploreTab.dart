@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hear_me/CategoriesScreen.dart';
 
 class Explore extends StatelessWidget {
   Explore({super.key});
@@ -48,17 +49,28 @@ class Explore extends StatelessWidget {
                   ),
                   itemCount: _genres.length,
                   itemBuilder: (context, index) {
-                    return Card(
-                        color: _colors[index],
-                        child: Center(
-                          child: Text(
-                            _genres[index],
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ));
+                    return InkWell(
+                      onTap: () => {
+                        Navigator.push<void>(
+    context,
+    MaterialPageRoute<void>(
+      builder: (BuildContext context) => Categories(genres: _genres[index].toString().toLowerCase(),),
+    ),
+  ),
+                      },
+                      child: Card(
+                        
+                          color: _colors[index],
+                          child: Center(
+                            child: Text(
+                              _genres[index],
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          )),
+                    );
                   }),
             )
           ],
