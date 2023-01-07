@@ -15,15 +15,6 @@ class MyAudioPlayer extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         iconTheme: const IconThemeData(color: Colors.deepOrange),
-        actions: [
-          IconButton(
-              onPressed: () {
-                print(audios.replaceAll('{', '').replaceAll('}', ''));
-              },
-              icon: const Icon(
-                Icons.list,
-              )),
-        ],
       ),
       body: Center(
         child: Column(
