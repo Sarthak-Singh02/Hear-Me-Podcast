@@ -16,6 +16,7 @@ class Episodes extends StatelessWidget {
   final String podcast_title;
 
   List _audios = [];
+  String title = "Unable to load title";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,12 +74,13 @@ class Episodes extends StatelessWidget {
                           MaterialPageRoute<void>(
                             builder: (BuildContext context) => MyAudioPlayer(
                               audios: _audios[0].toString(),
+                              title: title,
                             ),
                           ),
                         );
                       },
                       child: const Icon(
-                        Icons.play_arrow_rounded,
+                        Icons.podcasts_rounded,
                         color: Colors.black,
                       ),
                     )),
@@ -86,11 +88,10 @@ class Episodes extends StatelessWidget {
               Container(
                 alignment: Alignment.centerRight,
                 child: InkWell(
-                  onTap: () => {
-                    print("hue hue"),
-                  },
-                  child: 
-                Icon(Icons.favorite_border)),
+                    onTap: () => {
+                          print("hue hue"),
+                        },
+                    child: Icon(Icons.favorite_border)),
               )
             ],
           ),
@@ -131,7 +132,7 @@ query {
                   for (int i = 0; i < response.length; i++) {
                     _audios.add({response[i]["audioUrl"]});
                   }
-
+                  title = response[0]["title"];
                   return (response.isNotEmpty)
                       ? ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),

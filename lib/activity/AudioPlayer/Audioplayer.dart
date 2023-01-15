@@ -7,114 +7,228 @@ import 'package:hear_me/BloC/AudioPlayerBloc/audio_player_bloc.dart';
 import '../../BloC/AudioPlayerBloc/audio_player_state.dart';
 
 class MyAudioPlayer extends StatelessWidget {
+  final String title;
   final String audios;
-  MyAudioPlayer({super.key, required this.audios});
+  MyAudioPlayer({super.key, required this.audios, required this.title});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          title,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.transparent,
         iconTheme: const IconThemeData(color: Colors.deepOrange),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.podcasts_rounded,
-              color: Colors.deepOrange,
-              size: 200,
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 8,
-            ),
-            Slider(
-              activeColor: Colors.deepOrange,
-              inactiveColor: Colors.white,
-              min: 0.0,
-              max: 2.0,
-              value: 1.0,
-              onChanged: (value) {
-                // final position = Duration(seconds: value.toInt());
-                // audioPlayer.seek(position);
-                // audioPlayer.resume();
-                // _animationIconController1.forward();
-              },
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 12,
-            ),
-            BlocProvider(
-              create: (context) => AudioPlayerBloc(),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  // IconButton(
-                  //   onPressed: () {},
-                  //   icon: const Icon(
-                  //     CupertinoIcons.backward_end_fill,
-                  //     color: Colors.white,
-                  //   ),
-                  // ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      CupertinoIcons.backward_fill,
-                      color: Colors.white,
-                    ),
-                  ),
-                  BlocBuilder<AudioPlayerBloc, AudioPlayerState>(
-                    builder: (context, state) {
-                      if (state is AudioPlayerLoadingState) {
-                        context.read<AudioPlayerBloc>().play(
-                            audios.replaceAll('{', '').replaceAll('}', ''));
-                      }
-                      return (state is AudioPlayerLoadingState)
-                          ? const CircularProgressIndicator()
-                          : IconButton(
-                              onPressed: () async {
-                                if (state is AudioPlayerPlayState) {
-                                  context.read<AudioPlayerBloc>().pause();
-                                } else {
-                                  context.read<AudioPlayerBloc>().play(audios
-                                      .replaceAll('{', '')
-                                      .replaceAll('}', ''));
-                                }
-                              },
-                              icon: (state is AudioPlayerPlayState)
-                                  ? const Icon(
-                                      CupertinoIcons.pause_circle,
-                                      color: Colors.deepOrange,
-                                      size: 40,
-                                    )
-                                  : const Icon(
-                                      CupertinoIcons.play_circle,
-                                      color: Colors.deepOrange,
-                                      size: 40,
-                                    ),
-                            );
-                    },
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      CupertinoIcons.forward_fill,
-                      color: Colors.white,
-                    ),
-                  ),
-                  // IconButton(
-                  //   onPressed: () {},
-                  //   icon: const Icon(
-                  //     CupertinoIcons.forward_end_fill,
-                  //     color: Colors.white,
-                  //   ),
-                  // ),
-                ],
-              ),
-            ),
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.podcasts,
+            color: Colors.deepOrange,
+            size: 150,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          CustomSlider(
+            audios: audios,
+          ),
+        ],
       ),
     );
+  }
+}
+
+class CustomSlider extends StatefulWidget {
+  final String audios;
+  CustomSlider({super.key, required this.audios});
+
+  @override
+  State<CustomSlider> createState() => _CustomSliderState();
+}
+
+class _CustomSliderState extends State<CustomSlider>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationIconController1;
+
+  late AudioPlayer audioPlayer;
+  Duration duration = Duration.zero;
+  Duration position = Duration.zero;
+  bool issongplaying = false;
+  String formatTime(int seconds) {
+    return '${(Duration(seconds: seconds))}'
+        .split('.')[0]
+        .padLeft(4, '0')
+        .toString()
+        .substring(2, 7);
+  }
+
+  void initState() {
+    super.initState();
+    audioPlayer = new AudioPlayer();
+    _animationIconController1 = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 750),
+      reverseDuration: Duration(milliseconds: 750),
+    );
+    audioPlayer.onPlayerStateChanged.listen((state) {
+      if (mounted) {
+        setState(() {
+          issongplaying = state == PlayerState.playing;
+        });
+      }
+    });
+
+    audioPlayer.onDurationChanged.listen((newDuration) {
+      if (mounted) {
+        setState(() {
+          duration = newDuration;
+        });
+      }
+    });
+
+    audioPlayer.onPositionChanged.listen((newPosition) {
+      if (mounted) {
+        setState(() {
+          position = newPosition;
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.black,
+      ),
+      child: Column(
+        children: [
+          Slider(
+            activeColor: Colors.deepOrange,
+            inactiveColor: Colors.white,
+            min: 0,
+            max: duration.inSeconds.toDouble(),
+            value: position.inSeconds.toDouble(),
+            onChanged: (value) {
+              final position = Duration(seconds: value.toInt());
+              audioPlayer.seek(position);
+              audioPlayer.resume();
+              _animationIconController1.forward();
+            },
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  formatTime(position.inSeconds),
+                  style: TextStyle(color: Colors.white),
+                ),
+                Text(
+                  formatTime((duration).inSeconds),
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              // Icon(
+              //   Icons.refresh,
+              //   color: Colors.black,
+              // ),
+              InkWell(
+                onTap: () {
+                  if (mounted) {
+                    setState(() {
+                      audioPlayer.seek(Duration(
+                          seconds: position.inSeconds.toDouble().toInt() - 15));
+                    });
+                  }
+                },
+                child: Icon(
+                  CupertinoIcons.backward_fill,
+                  color: Colors.deepOrange,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  if (mounted) {
+                    setState(
+                      () {
+                        if (!issongplaying) {
+                          audioPlayer.play(UrlSource(widget.audios
+                              .replaceAll('{', '')
+                              .replaceAll('}', '')));
+                        } else {
+                          audioPlayer.pause();
+                        }
+                        issongplaying
+                            ? _animationIconController1.reverse()
+                            : _animationIconController1.forward();
+                        issongplaying = !issongplaying;
+                      },
+                    );
+                  }
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AnimatedIcon(
+                        icon: AnimatedIcons.play_pause,
+                        size: 55,
+                        progress: _animationIconController1,
+                        color: Colors.deepOrange,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  if (mounted) {
+                    setState(() {
+                      audioPlayer.seek(Duration(
+                          seconds: position.inSeconds.toDouble().toInt() + 15));
+                    });
+                  }
+                },
+                child: Icon(
+                  CupertinoIcons.forward_fill,
+                  color: Colors.deepOrange,
+                ),
+              ),
+              // Icon(
+              //   Icons.repeat,
+              //   color: Colors.black,
+              // )
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          )
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    audioPlayer.dispose();
+    super.dispose();
   }
 }
