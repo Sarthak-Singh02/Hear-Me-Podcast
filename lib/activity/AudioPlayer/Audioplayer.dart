@@ -1,10 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hear_me/BloC/AudioPlayerBloc/audio_player_bloc.dart';
-
-import '../../BloC/AudioPlayerBloc/audio_player_state.dart';
 
 class MyAudioPlayer extends StatelessWidget {
   final String title;
@@ -58,12 +54,32 @@ class _CustomSliderState extends State<CustomSlider>
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
   bool issongplaying = false;
+  bool isLoading = true;
   String formatTime(int seconds) {
     return '${(Duration(seconds: seconds))}'
         .split('.')[0]
         .padLeft(4, '0')
         .toString()
         .substring(2, 7);
+  }
+
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: new Row(
+        children: [
+          CircularProgressIndicator(),
+          Container(
+              margin: EdgeInsets.only(left: 7), child: Text("Loading...")),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   void initState() {
@@ -96,6 +112,16 @@ class _CustomSliderState extends State<CustomSlider>
           position = newPosition;
         });
       }
+    });
+    loadingPodcast();
+  }
+
+  loadingPodcast() async {
+    return await audioPlayer
+        .play(UrlSource(widget.audios.replaceAll('{', '').replaceAll('}', '')))
+        .whenComplete(() {
+      isLoading = false;
+      _animationIconController1.forward();
     });
   }
 
@@ -161,42 +187,53 @@ class _CustomSliderState extends State<CustomSlider>
                   color: Colors.deepOrange,
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  if (mounted) {
-                    setState(
-                      () {
-                        if (!issongplaying) {
-                          audioPlayer.play(UrlSource(widget.audios
-                              .replaceAll('{', '')
-                              .replaceAll('}', '')));
-                        } else {
-                          audioPlayer.pause();
+              Stack(
+                children: [
+                  Visibility(
+                      visible: isLoading ? true : false,
+                      child: CircularProgressIndicator.adaptive()),
+                  Visibility(
+                    visible: isLoading ? false : true,
+                    child: GestureDetector(
+                      onTap: () {
+                        if (mounted) {
+                          setState(
+                            () {
+                              if (!issongplaying && isLoading == false) {
+                                audioPlayer.play(UrlSource(widget.audios
+                                    .replaceAll('{', '')
+                                    .replaceAll('}', '')));
+                              } else if (issongplaying && isLoading == false) {
+                                audioPlayer.pause();
+                              }
+                              issongplaying
+                                  ? _animationIconController1.reverse()
+                                  : _animationIconController1.forward();
+                              issongplaying = !issongplaying;
+                            },
+                          );
                         }
-                        issongplaying
-                            ? _animationIconController1.reverse()
-                            : _animationIconController1.forward();
-                        issongplaying = !issongplaying;
                       },
-                    );
-                  }
-                },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AnimatedIcon(
-                        icon: AnimatedIcons.play_pause,
-                        size: 55,
-                        progress: _animationIconController1,
-                        color: Colors.deepOrange,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          color: Colors.white,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: AnimatedIcon(
+                              icon: AnimatedIcons.play_pause,
+                              size: 55,
+                              progress: _animationIconController1,
+                              color: Colors.deepOrange,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
+
               InkWell(
                 onTap: () {
                   if (mounted) {
