@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:hear_me/activity/AudioPlayer/Audioplayer.dart';
 import 'package:hear_me/main.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:path_provider/path_provider.dart';
 
 class Episodes extends StatelessWidget {
   Episodes(
@@ -17,8 +20,17 @@ class Episodes extends StatelessWidget {
 
   List _audios = [];
   String title = "Unable to load title";
+
+  @override
+  Future<void> initState() async {
+    final applicationDocumentDir=await getApplicationDocumentsDirectory();
+    await Hive.initFlutter(applicationDocumentDir.path);
+    await Hive.openBox("myBox");
+  }
   @override
   Widget build(BuildContext context) {
+    var box;
+    bool _isfavourites=false;
     return Scaffold(
       body: ListView(
         children: [
@@ -87,12 +99,20 @@ class Episodes extends StatelessWidget {
               ),
               Container(
                 alignment: Alignment.centerRight,
-                child: InkWell(
-                    onTap: () => {
-                          print("hue hue"),
-                        },
-                    child: Icon(Icons.favorite_border)),
+                child:IconButton(
+                icon: Icon(Icons.favorite,
+                    color: box!.isEmpty ? Colors.white : Colors.red),
+                onPressed: () {
+                  
+                    _isfavourites = !_isfavourites;
+                     (context as Element).markNeedsBuild();
+                  if (box!.isEmpty)
+                    box!.put(podcast_id,podcast_image);
+                  else
+                    box!.delete(podcast_id);
+                },
               )
+              ),
             ],
           ),
           ScrollConfiguration(
