@@ -1,36 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/container.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:hear_me/activity/AudioPlayer/Audioplayer.dart';
-import 'package:hear_me/main.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/adapters.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
 
-class Episodes extends StatelessWidget {
-  Episodes(
-      {super.key,
-      required this.podcast_id,
-      required this.podcast_description,
-      required this.podcast_title,
-      required this.podcast_image});
+import '../database_helper.dart';
+import '../main.dart';
+import 'AudioPlayer/Audioplayer.dart';
+
+class Episodes extends StatefulWidget {
   final String podcast_image;
   final String podcast_id;
   final String podcast_description;
   final String podcast_title;
-
-  List _audios = [];
-  String title = "Unable to load title";
+  const Episodes({super.key,required this.podcast_image,required this.podcast_description,required this.podcast_id,required this.podcast_title});
 
   @override
-  Future<void> initState() async {
-    final applicationDocumentDir=await getApplicationDocumentsDirectory();
-    await Hive.initFlutter(applicationDocumentDir.path);
-    await Hive.openBox("myBox");
-  }
+  State<Episodes> createState() => _EpisodesState();
+}
+List _audios = [];
+String title = "Unable to load title";
+var database;
+class _EpisodesState extends State<Episodes> {
+
+
   @override
   Widget build(BuildContext context) {
-    var box;
-    bool _isfavourites=false;
     return Scaffold(
       body: ListView(
         children: [
@@ -47,7 +42,7 @@ class Episodes extends StatelessWidget {
                         colorFilter: ColorFilter.mode(
                             Colors.black.withOpacity(0.7), BlendMode.dstATop),
                         image: NetworkImage(
-                          podcast_image,
+                          widget.podcast_image,
                         ),
                         onError: (exception, stackTrace) {
                           const Center(
@@ -62,7 +57,7 @@ class Episodes extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(25.0),
                       child: Text(
-                        podcast_description,
+                        widget.podcast_description,
                         softWrap: true,
                         overflow: TextOverflow.visible,
                         style: TextStyle(
@@ -99,20 +94,12 @@ class Episodes extends StatelessWidget {
               ),
               Container(
                 alignment: Alignment.centerRight,
-                child:IconButton(
-                icon: Icon(Icons.favorite,
-                    color: box!.isEmpty ? Colors.white : Colors.red),
-                onPressed: () {
-                  
-                    _isfavourites = !_isfavourites;
-                     (context as Element).markNeedsBuild();
-                  if (box!.isEmpty)
-                    box!.put(podcast_id,podcast_image);
-                  else
-                    box!.delete(podcast_id);
-                },
+                child: InkWell(
+                    onTap: () => {
+                          print("hue hue"),
+                        },
+                    child: Icon(Icons.favorite_border)),
               )
-              ),
             ],
           ),
           ScrollConfiguration(
@@ -120,23 +107,23 @@ class Episodes extends StatelessWidget {
             child: Query(
                 options: QueryOptions(
                   document: gql("""
-query {
-    podcast(identifier:{id: "$podcast_id", type : PODCHASER}) {
+    query {
+    podcast(identifier:{id: "${widget.podcast_id}", type : PODCHASER}) {
         episodes(
               page: 0,
               first: 1) {          
-  data {
+    data {
       id,
       guid,
       title,
       description,
       imageUrl,
       audioUrl  
-  }
-}        
     }
-}
-"""),
+    }        
+    }
+    }
+    """),
                 ),
                 builder: (QueryResult result,
                     {VoidCallback? refetch, FetchMore? fetchMore}) {
@@ -179,6 +166,28 @@ query {
           )
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () { 
+              _addItem();
+             // print(_audios[0].toString());
+              //_deleteItem(int.parse(widget.podcast_id));
+         },
+        child: Icon(
+          Icons.favorite_border,
+        ),
+      ),
     );
+  }
+
+   Future<void> _addItem() async {
+    await SQLHelper.createItem(
+      int.parse(widget.podcast_id),widget.podcast_title,widget.podcast_description,widget.podcast_image,_audios[0].toString().replaceAll('{', '').replaceAll('}', ''));
+  }
+
+   void _deleteItem(int id) async {
+    await SQLHelper.deleteItem(id);
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Successfully deleted a journal!'),
+    ));
   }
 }

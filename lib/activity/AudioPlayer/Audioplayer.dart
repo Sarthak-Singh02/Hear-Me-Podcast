@@ -6,6 +6,7 @@ class MyAudioPlayer extends StatelessWidget {
   final String title;
   final String audios;
   MyAudioPlayer({super.key, required this.audios, required this.title});
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,6 +38,7 @@ class MyAudioPlayer extends StatelessWidget {
     );
   }
 }
+
 
 class CustomSlider extends StatefulWidget {
   final String audios;

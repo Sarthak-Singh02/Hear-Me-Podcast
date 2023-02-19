@@ -8,6 +8,7 @@ import 'package:hear_me/Queries.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hear_me/activity/Episodes.dart';
 import 'package:hear_me/main.dart';
+import 'package:provider/provider.dart';
 
 class TrendingTab extends StatelessWidget {
   const TrendingTab({super.key});
@@ -47,7 +48,7 @@ class TrendingTab extends StatelessWidget {
                           }
                           final response =
                               result.data!["podcasts"]["data"] as List;
-
+    
                           return GridView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
