@@ -20,7 +20,7 @@ class Episodes extends StatefulWidget {
 }
 List _audios = [];
 String title = "Unable to load title";
-var database;
+bool isfav=false;
 class _EpisodesState extends State<Episodes> {
 
 
@@ -92,14 +92,6 @@ class _EpisodesState extends State<Episodes> {
                       ),
                     )),
               ),
-              Container(
-                alignment: Alignment.centerRight,
-                child: InkWell(
-                    onTap: () => {
-                          print("hue hue"),
-                        },
-                    child: Icon(Icons.favorite_border)),
-              )
             ],
           ),
           ScrollConfiguration(
@@ -167,27 +159,41 @@ class _EpisodesState extends State<Episodes> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () { 
+        onPressed: () async{ 
+         var data=await _getItem(int.parse(widget.podcast_id));
+          if(data.length!=0){
+            setState(() {
+              isfav=false;
+              _deleteItem(int.parse(widget.podcast_id));
+            });
+          }else{
+             setState(() {
+             isfav=true;
               _addItem();
-             // print(_audios[0].toString());
-              //_deleteItem(int.parse(widget.podcast_id));
+           });
+         }
+
          },
-        child: Icon(
-          Icons.favorite_border,
-        ),
+        child: isfav?Icon(Icons.favorite,color: Colors.green,)
+        :Icon(
+          Icons.favorite_border),
       ),
     );
   }
 
    Future<void> _addItem() async {
     await SQLHelper.createItem(
-      int.parse(widget.podcast_id),widget.podcast_title,widget.podcast_description,widget.podcast_image,_audios[0].toString().replaceAll('{', '').replaceAll('}', ''));
+      int.parse(widget.podcast_id),widget.podcast_title,widget.podcast_description,widget.podcast_image);
   }
 
-   void _deleteItem(int id) async {
+   _deleteItem(int id) async {
     await SQLHelper.deleteItem(id);
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Successfully deleted a journal!'),
+      content: Text('Successfully deleted!'),
     ));
+  }
+
+  _getItem(int id) async {
+    return await SQLHelper.getItem(id);
   }
 }

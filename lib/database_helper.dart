@@ -7,8 +7,7 @@ class SQLHelper{
         id INTEGER PRIMARY KEY,
         title TEXT,
         description TEXT,
-        image TEXT,
-        audio TEXT
+        image TEXT
       )
       """);
   }
@@ -24,10 +23,10 @@ class SQLHelper{
     );
   }
   //add data
-   static Future<int> createItem(int id,String title, String? descrption,String? image,String? audio) async {
+   static Future<int> createItem(int id,String title, String? descrption,String? image) async {
     final db = await SQLHelper.db();
 
-    final data = {'id':id,'title': title, 'description': descrption,'image':image,'audio':audio};
+    final data = {'id':id,'title': title, 'description': descrption,'image':image};
         id = await db.insert('items', data,
         conflictAlgorithm: ConflictAlgorithm.replace);
     return id;

@@ -109,7 +109,7 @@ class Categories extends StatelessWidget {
                                         placeholder: (context, url) =>
                                             Center(child: new CircularProgressIndicator()),
                                         errorWidget: (context, url, error) =>
-                                            new Icon(Icons.error),
+                                            Center(child: new Text("No image available",style: TextStyle(color: Colors.white),)),
                                       ),
                                     ),
                                   )),
